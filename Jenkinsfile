@@ -1,20 +1,22 @@
-pipeline{
+pipeline {
     agent any
-
-    tools {
-         maven 'maven'
-         jdk 'java'
-    }
-
-    stages{
-        stage('checkout'){
-            steps{
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github access', url: 'https://github.com/sreenivas449/java-hello-world-with-maven.git']]])
+    
+    stages {
+        stage('MVN PACAKAGE') {
+            steps {
+                sh '''export M2_HOME=/opt/maven
+                export MAVEN_HOME=/opt/maven
+                export PATH=${M2_HOME}/bin:${PATH}
+                mvn clean install
+                sleep 10
+                cd target/
+                java -jar jb*.jar'''
             }
         }
-        stage('build'){
-            steps{
-               bat 'mvn package'
+        
+        stage('DEPLOYMENT IS SUCCESS') {
+            steps {
+                sh 'sleep 10'
             }
         }
     }
